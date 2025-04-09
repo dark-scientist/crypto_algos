@@ -30,6 +30,13 @@ This application transforms the original C-based cipher program into a modern, r
 13. **Double Transposition Cipher** - Applies columnar transposition twice with different keys.
 14. **Myszkowski Cipher** - A variation of columnar transposition with special handling for repeated letters in the key.
 
+## Outputs:
+![Screenshot (197)](https://github.com/user-attachments/assets/3b057d5a-a233-430a-a244-4ae2abdd220a)
+![Screenshot (198)](https://github.com/user-attachments/assets/894246af-2707-481d-8c2b-05ba8a3e337a)
+![Screenshot (199)](https://github.com/user-attachments/assets/a34b4472-e92e-49c3-ae0d-4e5e2cd38928)
+![Screenshot (200)](https://github.com/user-attachments/assets/65a311de-3bf8-4d9b-85f9-4627572b5a4a)
+
+
 ## How to Use
 
 1. Save the entire HTML content to a file named `index.html`
