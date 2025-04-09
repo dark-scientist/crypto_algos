@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prithwin's Cipher Suite</title>
+    <style>
+        :root {
+            --primary: #1a2639;
+            --secondary: #3e4a61;
+            --accent: #c24d2c;
+            --light: #f9f9f9;
+            --gray: #d9d9d9;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+            color: var(--primary);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header p {
+            font-style: italic;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        .app-container {
+            display: flex;
+            margin-top: 30px;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            flex: 0 0 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            height: fit-content;
+        }
+        
+        .sidebar h2 {
+            margin-top: 0;
+            color: var(--accent);
+            border-bottom: 1px solid var(--gray);
+            padding-bottom: 10px;
+        }
+        
+        .cipher-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .cipher-list li {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            margin-bottom: 5px;
+        }
+        
+        .cipher-list li:hover {
+            background-color: var(--gray);
+        }
+        
+        .cipher-list li.active {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+        
+        .cipher-title {
+            margin-top: 0;
+            color: var(--secondary);
+            border-bottom: 1px solid var(--gray);
+            padding-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        textarea, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .parameter-inputs {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .parameter-inputs .form-group {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #a83c1c;
+        }
+        
+        .results {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray);
+        }
+        
+        .results h3 {
+            color: var(--secondary);
+        }
+        
+        .output {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent);
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        
+        .credit {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                flex: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Prithwin's Cipher Suite</h1>
+            <p>An elegant collection of classical cryptographic ciphers</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="app-container">
+            <div class="sidebar">
+                <h2>Cipher Selection</h2>
+                <ul class="cipher-list" id="cipherList">
+                    <li data-cipher="atbash" class="active">Atbash Cipher</li>
+                    <li data-cipher="caesar">Caesar Cipher</li>
+                    <li data-cipher="affine">Affine Cipher</li>
+                    <li data-cipher="vigenere">Vigenère Cipher</li>
+                    <li data-cipher="gronsfeld">Gronsfeld Cipher</li>
+                    <li data-cipher="beaufort">Beaufort Cipher</li>
+                    <li data-cipher="autokey">Auto Key Cipher</li>
+                    <li data-cipher="runningkey">Running Key Cipher</li>
+                    <li data-cipher="hill">Hill Cipher (2x2)</li>
+                    <li data-cipher="railfence">Rail Fence Cipher</li>
+                    <li data-cipher="route">Route Cipher</li>
+                    <li data-cipher="columnar">Columnar Cipher</li>
+                    <li data-cipher="doubletrans">Double Transposition</li>
+                    <li data-cipher="myszkowski">Myszkowski Cipher</li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <h2 class="cipher-title" id="cipherTitle">Atbash Cipher</h2>
+                
+                <div class="form-group">
+                    <label for="plaintext">Plaintext:</label>
+                    <textarea id="plaintext" rows="4" placeholder="Enter text to encrypt...">Prithwin</textarea>
+                </div>
+                
+                <div id="parameterSection" class="parameter-inputs">
+                    <!-- Dynamic parameters will appear here -->
+                </div>
+                
+                <button id="encryptBtn">Encrypt</button>
+                
+                <div class="results">
+                    <h3>Result:</h3>
+                    <div class="output" id="ciphertext">Loading...</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Classical Cryptography Suite &copy; 2025</p>
+            <p class="credit">Created by Prithwin</p>
+        </footer>
+    </div>
+
+    <script>
+        // Cipher implementations
+        const ciphers = {
+            atbash: {
+                title: "Atbash Cipher",
+                params: [],
+                encrypt: function(text) {
+                    return text.split('').map(char => {
+                        if (/[a-z]/.test(char)) {
+                            return String.fromCharCode(219 - char.charCodeAt(0)); // 219 = 'a' + 'z'
+                        } else if (/[A-Z]/.test(char)) {
+                            return String.fromCharCode(155 - char.charCodeAt(0)); // 155 = 'A' + 'Z'
+                        }
+                        return char;
+                    }).join('');
+                }
+            },
+            caesar: {
+                title: "Caesar Cipher",
+                params: [
+                    {name: "shift", type: "number", label: "Shift Value:", defaultValue: 3}
+                ],
+                encrypt: function(text, params) {
+                    const shift = parseInt(params.shift) % 26;
+                    return text.split('').map(char => {
+                        if (/[a-z]/.test(char)) {
+                            return String.fromCharCode((char.charCodeAt(0) - 97 + shift + 26) % 26 + 97);
+                        } else if (/[A-Z]/.test(char)) {
+                            return String.fromCharCode((char.charCodeAt(0) - 65 + shift + 26) % 26 + 65);
+                        }
+                        return char;
+                    }).join('');
+                }
+            },
+            affine: {
+                title: "Affine Cipher",
+                params: [
+                    {name: "a", type: "number", label: "A (coprime with 26):", defaultValue: 5},
+                    {name: "b", type: "number", label: "B:", defaultValue: 8}
+                ],
+                encrypt: function(text, params) {
+                    const a = parseInt(params.a);
+                    const b = parseInt(params.b);
+                    return text.split('').map(char => {
+                        if (/[a-z]/.test(char)) {
+                            return String.fromCharCode((a * (char.charCodeAt(0) - 97) + b) % 26 + 97);
+                        } else if (/[A-Z]/.test(char)) {
+                            return String.fromCharCode((a * (char.charCodeAt(0) - 65) + b) % 26 + 65);
+                        }
+                        return char;
+                    }).join('');
+                }
+            },
+            vigenere: {
+                title: "Vigenère Cipher",
+                params: [
+                    {name: "key", type: "text", label: "Key:", defaultValue: "KEY"}
+                ],
+                encrypt: function(text, params) {
+                    const key = params.key.toUpperCase();
+                    let result = '';
+                    let j = 0;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        if (/[a-zA-Z]/.test(char)) {
+                            const isUpper = char === char.toUpperCase();
+                            const base = isUpper ? 65 : 97;
+                            const keyChar = key[j % key.length].charCodeAt(0) - 65;
+                            const charCode = char.charCodeAt(0);
+                            result += String.fromCharCode((charCode - base + keyChar) % 26 + base);
+                            j++;
+                        } else {
+                            result += char;
+                        }
+                    }
+                    return result;
+                }
+            },
+            gronsfeld: {
+                title: "Gronsfeld Cipher",
+                params: [
+                    {name: "key", type: "text", label: "Numeric Key:", defaultValue: "1234"}
+                ],
+                encrypt: function(text, params) {
+                    const key = params.key;
+                    let result = '';
+                    let j = 0;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        if (/[a-zA-Z]/.test(char)) {
+                            const isUpper = char === char.toUpperCase();
+                            const base = isUpper ? 65 : 97;
+                            const keyChar = parseInt(key[j % key.length]);
+                            const charCode = char.charCodeAt(0);
+                            result += String.fromCharCode((charCode - base + keyChar) % 26 + base);
+                            j++;
+                        } else {
+                            result += char;
+                        }
+                    }
+                    return result;
+                }
+            },
+            beaufort: {
+                title: "Beaufort Cipher",
+                params: [
+                    {name: "key", type: "text", label: "Key:", defaultValue: "KEY"}
+                ],
+                encrypt: function(text, params) {
+                    const key = params.key.toUpperCase();
+                    let result = '';
+                    let j = 0;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        if (/[a-zA-Z]/.test(char)) {
+                            const isUpper = char === char.toUpperCase();
+                            const base = isUpper ? 65 : 97;
+                            const keyChar = key[j % key.length].charCodeAt(0) - 65;
+                            const ch = char.toUpperCase().charCodeAt(0) - 65;
+                            result += String.fromCharCode((keyChar - ch + 26) % 26 + (isUpper ? 65 : 97));
+                            j++;
+                        } else {
+                            result += char;
+                        }
+                    }
+                    return result;
+                }
+            },
+            autokey: {
+                title: "Auto Key Cipher",
+                params: [
+                    {name: "key", type: "text", label: "Initial Key:", defaultValue: "KEY"}
+                ],
+                encrypt: function(text, params) {
+                    const initialKey = params.key.toUpperCase();
+                    let fullKey = initialKey + text.replace(/[^a-zA-Z]/g, '').toUpperCase();
+                    let result = '';
+                    let j = 0;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        if (/[a-zA-Z]/.test(char)) {
+                            const isUpper = char === char.toUpperCase();
+                            const base = isUpper ? 65 : 97;
+                            const keyChar = fullKey[j].charCodeAt(0) - 65;
+                            const charCode = char.charCodeAt(0);
+                            result += String.fromCharCode((charCode - base + keyChar) % 26 + base);
+                            j++;
+                        } else {
+                            result += char;
+                        }
+                    }
+                    return result;
+                }
+            },
+            runningkey: {
+                title: "Running Key Cipher",
+                params: [
+                    {name: "key", type: "text", label: "Long Key (book text):", defaultValue: "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG"}
+                ],
+                encrypt: function(text, params) {
+                    const key = params.key.toUpperCase().replace(/[^A-Z]/g, '');
+                    let result = '';
+                    let j = 0;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        if (/[a-zA-Z]/.test(char)) {
+                            const isUpper = char === char.toUpperCase();
+                            const base = isUpper ? 65 : 97;
+                            const keyChar = key[j % key.length].charCodeAt(0) - 65;
+                            const charCode = char.charCodeAt(0);
+                            result += String.fromCharCode((charCode - base + keyChar) % 26 + base);
+                            j++;
+                        } else {
+                            result += char;
+                        }
+                    }
+                    return result;
+                }
+            },
+            hill: {
+                title: "Hill Cipher (2x2)",
+                params: [
+                    {name: "key11", type: "number", label: "Key[1,1]:", defaultValue: 2},
+                    {name: "key12", type: "number", label: "Key[1,2]:", defaultValue: 3},
+                    {name: "key21", type: "number", label: "Key[2,1]:", defaultValue: 1},
+                    {name: "key22", type: "number", label: "Key[2,2]:", defaultValue: 4}
+                ],
+                encrypt: function(text, params) {
+                    // Prepare the key matrix
+                    const key = [
+                        [parseInt(params.key11), parseInt(params.key12)],
+                        [parseInt(params.key21), parseInt(params.key22)]
+                    ];
+                    
+                    // Remove non-alphabet characters and convert to uppercase
+                    let cleanText = text.replace(/[^a-zA-Z]/g, '').toUpperCase();
+                    
+                    // If the text length is odd, append 'X'
+                    if (cleanText.length % 2 !== 0) {
+                        cleanText += 'X';
+                    }
+                    
+                    let result = '';
+                    
+                    // Process text in pairs
+                    for (let i = 0; i < cleanText.length; i += 2) {
+                        const x = cleanText.charCodeAt(i) - 65;
+                        const y = cleanText.charCodeAt(i + 1) - 65;
+                        
+                        const a = (key[0][0] * x + key[0][1] * y) % 26;
+                        const b = (key[1][0] * x + key[1][1] * y) % 26;
+                        
+                        result += String.fromCharCode(a + 65);
+                        result += String.fromCharCode(b + 65);
+                    }
+                    
+                    return result;
+                }
+            },
+            railfence: {
+                title: "Rail Fence Cipher",
+                params: [
+                    {name: "rails", type: "number", label: "Number of Rails:", defaultValue: 3}
+                ],
+                encrypt: function(text, params) {
+                    const rails = parseInt(params.rails);
+                    if (rails <= 1) return text; // No encryption with 1 rail
+                    
+                    const fence = Array(rails).fill().map(() => Array(text.length).fill('\n'));
+                    
+                    let rail = 0;
+                    let direction = 1; // down
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        fence[rail][i] = text[i];
+                        
+                        rail += direction;
+                        
+                        if (rail === 0 || rail === rails - 1) {
+                            direction = -direction;
+                        }
+                    }
+                    
+                    let result = '';
+                    for (let i = 0; i < rails; i++) {
+                        for (let j = 0; j < text.length; j++) {
+                            if (fence[i][j] !== '\n') {
+                                result += fence[i][j];
+                            }
+                        }
+                    }
+                    
+                    return result;
+                }
+            },
+            route: {
+                title: "Route Cipher",
+                params: [
+                    {name: "rows", type: "number", label: "Rows:", defaultValue: 3},
+                    {name: "cols", type: "number", label: "Columns:", defaultValue: 4}
+                ],
+                encrypt: function(text, params) {
+                    const rows = parseInt(params.rows);
+                    const cols = parseInt(params.cols);
+                    
+                    // Create the grid and fill with spaces
+                    const grid = Array(rows).fill().map(() => Array(cols).fill(' '));
+                    
+                    // Fill grid row by row
+                    let k = 0;
+                    for (let i = 0; i < rows; i++) {
+                        for (let j = 0; j < cols; j++) {
+                            if (k < text.length) {
+                                grid[i][j] = text[k++];
+                            }
+                        }
+                    }
+                    
+                    // Read grid column by column
+                    let result = '';
+                    for (let j = 0; j < cols; j++) {
+                        for (let i = 0; i < rows; i++) {
+                            if (grid[i][j] !== ' ') {
+                                result += grid[i][j];
+                            }
+                        }
+                    }
+                    
+                    return result;
+                }
+            },
+            columnar: {
+                title: "Columnar Cipher",
+                params: [
+                    {name: "key", type: "text", label: "Key:", defaultValue: "KEY"}
+                ],
+                encrypt: function(text, params) {
+                    const key = params.key;
+                    if (!key) return text;
+                    
+                    // Create key order
+                    const keyArray = [...key];
+                    const keyOrder = Array(key.length).fill().map((_, i) => i);
+                    keyOrder.sort((a, b) => keyArray[a].localeCompare(keyArray[b]));
+                    
+                    // Calculate rows required
+                    const rows = Math.ceil(text.length / key.length);
+                    
+                    // Fill the grid row by row
+                    const grid = Array(rows).fill().map(() => Array(key.length).fill(' '));
+                    
+                    let k = 0;
+                    for (let i = 0; i < rows; i++) {
+                        for (let j = 0; j < key.length; j++) {
+                            if (k < text.length) {
+                                grid[i][j] = text[k++];
+                            }
+                        }
+                    }
+                    
+                    // Read off columns in key order
+                    let result = '';
+                    for (let i = 0; i < key.length; i++) {
+                        const col = keyOrder.indexOf(i);
+                        for (let row = 0; row < rows; row++) {
+                            if (grid[row][col] !== ' ') {
+                                result += grid[row][col];
+                            }
+                        }
+                    }
+                    
+                    return result;
+                }
+            },
+            doubletrans: {
+                title: "Double Transposition Cipher",
+                params: [
+                    {name: "key1", type: "text", label: "First Key:", defaultValue: "KEY1"},
+                    {name: "key2", type: "text", label: "Second Key:", defaultValue: "KEY2"}
+                ],
+                encrypt: function(text, params) {
+                    // Apply columnar transposition twice
+                    const firstEncryption = ciphers.columnar.encrypt(text, {key: params.key1});
+                    return ciphers.columnar.encrypt(firstEncryption, {key: params.key2});
+                }
+            },
+            myszkowski: {
+                title: "Myszkowski Cipher",
+                params: [
+                    {name: "key", type: "text", label: "Key:", defaultValue: "TOMATO"}
+                ],
+                encrypt: function(text, params) {
+                    const key = params.key.toUpperCase();
+                    if (!key) return text;
+                    
+                    // Calculate rows required
+                    const rows = Math.ceil(text.length / key.length);
+                    
+                    // Fill the grid row by row
+                    const grid = Array(rows).fill().map(() => Array(key.length).fill(' '));
+                    
+                    let k = 0;
+                    for (let i = 0; i < rows; i++) {
+                        for (let j = 0; j < key.length; j++) {
+                            if (k < text.length) {
+                                grid[i][j] = text[k++];
+                            }
+                        }
+                    }
+                    
+                    // Read off columns in alphabetical order
+                    let result = '';
+                    for (let ch = 'A'.charCodeAt(0); ch <= 'Z'.charCodeAt(0); ch++) {
+                        const char = String.fromCharCode(ch);
+                        // Find all columns with this character
+                        const cols = [];
+                        for (let j = 0; j < key.length; j++) {
+                            if (key[j] === char) {
+                                cols.push(j);
+                            }
+                        }
+                        
+                        // If there are multiple columns with the same letter, read horizontally
+                        if (cols.length > 1) {
+                            for (let i = 0; i < rows; i++) {
+                                for (const col of cols) {
+                                    if (grid[i][col] !== ' ') {
+                                        result += grid[i][col];
+                                    }
+                                }
+                            }
+                        } else {
+                            // Otherwise, read vertically
+                            for (const col of cols) {
+                                for (let i = 0; i < rows; i++) {
+                                    if (grid[i][col] !== ' ') {
+                                        result += grid[i][col];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    return result;
+                }
+            }
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            const cipherList = document.getElementById('cipherList');
+            const cipherTitle = document.getElementById('cipherTitle');
+            const parameterSection = document.getElementById('parameterSection');
+            const encryptBtn = document.getElementById('encryptBtn');
+            const plaintext = document.getElementById('plaintext');
+            const ciphertext = document.getElementById('ciphertext');
+            
+            // Default cipher
+            let currentCipher = 'atbash';
+            
+            // Function to update parameter fields
+            function updateParameters(cipherType) {
+                parameterSection.innerHTML = '';
+                
+                const cipher = ciphers[cipherType];
+                if (!cipher) return;
+                
+                cipher.params.forEach(param => {
+                    const formGroup = document.createElement('div');
+                    formGroup.className = 'form-group';
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = param.name;
+                    label.textContent = param.label;
+                    
+                    const input = document.createElement('input');
+                    input.type = param.type;
+                    input.id = param.name;
+                    input.name = param.name;
+                    input.value = param.defaultValue;
+                    
+                    formGroup.appendChild(label);
+                    formGroup.appendChild(input);
+                    parameterSection.appendChild(formGroup);
+                });
+            }
+            
+            // Function to encrypt text
+            function encrypt() {
+                const cipher = ciphers[currentCipher];
+                if (!cipher) return;
+                
+                const text = plaintext.value;
+                const params = {};
+                
+                // Collect parameter values
+                cipher.params.forEach(param => {
+                    const input = document.getElementById(param.name);
+                    params[param.name] = input ? input.value : param.defaultValue;
+                });
+                
+                // Encrypt and display result
+                const encrypted = cipher.encrypt(text, params);
+                ciphertext.textContent = encrypted;
+            }
+            
+            // Set up event listeners
+            cipherList.addEventListener('click', function(e) {
+                if (e.target.tagName === 'LI') {
+                    // Update selected cipher
+                    const selectedCipher = e.target.getAttribute('data-cipher');
+                    if (selectedCipher) {
+                        currentCipher = selectedCipher;
+                        
+                        // Update UI
+                        document.querySelectorAll('.cipher-list li').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        e.target.classList.add('active');
+                        
+                        cipherTitle.textContent = ciphers[selectedCipher].title;
+                        updateParameters(selectedCipher);
+                        encrypt();
+                    }
+                }
+            });
+            
+            encryptBtn.addEventListener('click', encrypt);
+            plaintext.addEventListener('input', encrypt);
+            parameterSection.addEventListener('change', encrypt);
+            parameterSection.addEventListener('input', encrypt);
+            
+            // Initialize with default cipher
+            updateParameters(currentCipher);
+            encrypt();
+        });
+    </script>
+</body>
+</html>
